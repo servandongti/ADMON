@@ -1,31 +1,87 @@
-import { useRef } from 'react';
-import * as THREE from 'three';
-import styles from '../styles/Cube.module.css';
+import { motion } from "framer-motion";
 
-const Cube = () => {
-  const sceneRef = useRef<THREE.Scene>();
-  const rendererRef = useRef<THREE.WebGLRenderer>();
-
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-
-  const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
-  const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-  const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-  scene.add(cube);
-
-  const animate = () => {
-    requestAnimationFrame(animate);
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
-    renderer.render(scene, camera);
-  };
-
-  animate();
-
-  return <div className={styles.container} ref={(ref) => { ref && ref.appendChild(renderer.domElement) }} />;
+export const Cube = () => {
+  return (
+    <motion.div
+      style={{
+        width: "100px",
+        height: "100px",
+        backgroundColor: "transparent",
+        transformStyle: "preserve-3d",
+        rotateX: 30,
+        rotateY: 30,
+      }}
+      animate={{
+        rotateX: 390,
+        rotateY: 390,
+        transition: {
+          duration: 2,
+          repeat: Infinity,
+          repeatType: "reverse",
+        },
+      }}
+    >
+      <motion.div
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          backgroundImage: "url('/square.svg')",
+          backgroundSize: "100% 100%",
+          transform: "translateZ(50px)",
+        }}
+      />
+      <motion.div
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          backgroundImage: "url('/circle.svg')",
+          backgroundSize: "100% 100%",
+          transform: "rotateY(90deg) translateZ(50px)",
+        }}
+      />
+      <motion.div
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          backgroundImage: "url('/triangle.svg')",
+          backgroundSize: "100% 100%",
+          transform: "rotateY(180deg) translateZ(50px)",
+        }}
+      />
+      <motion.div
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          backgroundImage: "url('/star.svg')",
+          backgroundSize: "100% 100%",
+          transform: "rotateY(-90deg) translateZ(50px)",
+        }}
+      />
+      <motion.div
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          backgroundImage: "url('/rombo.svg')",
+          backgroundSize: "100% 100%",
+          transform: "rotateX(-90deg) translateZ(50px)",
+        }}
+      />
+      <motion.div
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          backgroundImage: "url('/rectangulo.svg')",
+          backgroundSize: "100% 100%",
+          transform: "rotateX(90deg) translateZ(50px)",
+        }}
+      />
+    </motion.div>
+  );
 };
 
-export default Cube;
