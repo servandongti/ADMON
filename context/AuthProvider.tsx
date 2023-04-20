@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 import { AuthContext } from "./AuthContext";
 
 export interface User {
-  username: string,
+  email: string,
   password: string,
 }
 
@@ -13,10 +13,16 @@ const useAuth = () => {
   const [loading, setLoading] = useState(true);
 
   const login = async (user: User) => {
-    setLoading(true);
-    await supabase.from('users').insert([{ username: user.username, password: user.password }])
+    let { data, error } = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password: user.password,
+    })
     setUsername('')
     setPassword('')
+
+    setLoading(false);
+
+    return { data, error }
   }
 
   const logout = async () => {
