@@ -1,20 +1,48 @@
 import { useState, useEffect, useRef } from "react";
-import { animate, motion, useMotionValue, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { deuteranopiaImages, Level, normalImages, protanopiaImages, SelectedValue, tritanopiaImages } from "../pages";
+
 type Props = {
   selectedShape: string;
+  selectedValue: SelectedValue;
+  level: Level;
   setScore: React.Dispatch<React.SetStateAction<number>>;
   setCorrect: React.Dispatch<React.SetStateAction<boolean>>;
+  setAttempts: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const shapes = ["/square.svg", "/circle.svg", "/triangle.svg", "/star.svg"];
 
-
-export const Cube: React.FC<Props> = ({ selectedShape, setScore, setCorrect }) => {
-  const [shapeName, setShapeName] = useState<string>("/square.svg");
+export const Cube: React.FC<Props> = ({ selectedShape, selectedValue, setScore, setCorrect, setAttempts }) => {
+  const [shapeName, setShapeName] = useState<string>(normalImages[0])
   const cubeRef = useRef<HTMLDivElement>(null);
+
+  const handleImageBySelectedValue = () => {
+    switch (selectedValue) {
+      case "protanopia":
+        return protanopiaImages;
+      case "deuteranopia":
+        return deuteranopiaImages;
+      case "tritanopia":
+        return tritanopiaImages;
+      default:
+        return normalImages;
+    }
+  };
+
   function generateRandomShape() {
-    setShapeName(shapes[Math.floor(Math.random() * 4)]);
+    const image = handleImageBySelectedValue();
+    let newShapeName = shapeName;
+    while (newShapeName === shapeName) {
+      newShapeName = image[Math.floor(Math.random() * 4)];
+    }
+    setShapeName(newShapeName);
   }
+
+
+  // change image according to selected value 
+  useEffect(() => {
+    generateRandomShape();
+  }, [selectedValue]);
 
   const handle3dMouseMove = (e: MouseEvent) => {
     if (!cubeRef.current) return;
@@ -29,20 +57,16 @@ export const Cube: React.FC<Props> = ({ selectedShape, setScore, setCorrect }) =
 
 
   useEffect(() => {
-    if (selectedShape === "") return;
-
-    if (selectedShape !== shapeName.replace("/", "").replace(".svg", "")) {
-      setCorrect(false);
-      return;
-    }
-
-    if (selectedShape === shapeName.replace("/", "").replace(".svg", "")) {
-      generateRandomShape();
-      setScore((prev) => prev + 1);
+    if (selectedShape === shapeName) {
       setCorrect(true);
+      setScore((prev) => prev + 1);
+      generateRandomShape();
+    } else {
+      setCorrect(false);
+      setScore((prev) => prev - 1);
+      setAttempts((prev) => prev - 1);
     }
-
-  }, [selectedShape]);
+  }, [selectedShape, selectedValue]);
 
   useEffect(() => {
     window.addEventListener("mousemove", handle3dMouseMove);
@@ -50,6 +74,7 @@ export const Cube: React.FC<Props> = ({ selectedShape, setScore, setCorrect }) =
       window.removeEventListener("mousemove", handle3dMouseMove);
     };
   }, []);
+
 
   return (
     <motion.div
