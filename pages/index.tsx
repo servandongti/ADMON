@@ -174,7 +174,7 @@ const Home: NextPage = () => {
           </button>
         </div>
       )}
-      <nav className="flex flex-row justify-between w-full max-w-4xl px-4 py-6">
+      <nav className="flex flex-row justify-between w-full max-w-4xl px-4 py-6 relative">
         <div
           className={`${correctClassName} inline-flex items-center justify-center rounded px-[15px] text-[13px] leading-none h-[35px] gap-[5px] shadow-[0_2px_10px] shadow-black/10 focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-slate-600 outline-none`}
         >
@@ -199,7 +199,7 @@ const Home: NextPage = () => {
         </div>
       </nav>
 
-      <main className="flex w-full flex-1 flex-col gap-3 items-center justify-center px-20 py-5 text-center">
+      <main className="flex w-full flex-1 flex-col gap-3 items-center justify-center px-20 py-5 text-center relative">
         <Cube
           selectedShape={selectedShape}
           selectedValue={selectedValue as SelectedValue}
@@ -210,11 +210,11 @@ const Home: NextPage = () => {
         />
       </main>
 
-      <p className="text-transparent font-semibold py-5 text-sm md:text-lg bg-clip-text bg-gradient-to-r from-violet-500 to-violet-900">
+      <p className="text-transparent font-semibold py-5 text-sm text-center md:text-lg bg-clip-text bg-gradient-to-r from-violet-500 to-violet-900">
         {message}
       </p>
       <footer
-        className={`inline-flex gap-5 h-24 w-full max-w-3xl bg-[#fbfaff] rounded items-center justify-center px-[15px]`}
+        className={`inline-flex gap-5 h-24 w-full max-w-3xl bg-[#fbfaff] rounded items-center justify-center px-[15px] relative`}
       >
         {shapes.map((shape, index) => (
           <div
