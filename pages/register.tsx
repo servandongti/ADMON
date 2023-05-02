@@ -1,33 +1,41 @@
 import { User } from "@supabase/supabase-js";
-import type { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
+import type { NextPage } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { FormEvent, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 
 function RegisterComponent() {
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [loading, setLoading] = React.useState(true);
+  const [email, setEmail] = React.useState("");
+  const { push } = useRouter();
 
-  const handleLogin = async (email: string, password: string) => {
-    await supabase.auth.signUp({
+  const handleLogin = async (email: string) => {
+    await supabase.auth.signInWithOtp({
       email: email || "",
-      password: password || "",
     });
-    setUsername("");
-    setPassword("");
+    setEmail("");
   };
+
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    await handleLogin(username, password);
+    await handleLogin(email);
 
-    setLoading(false);
   };
+
+  useEffect(() => {
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        // Redirect user to a specific URL
+        push("/")
+      }
+    });
+  }, [])
+
 
   return (
     <React.Fragment>
-      <h1 className="text-3xl font-semibold">Registarse</h1>
+      <h1 className="text-3xl font-semibold">Registrarse</h1>
       <form
         action="/api/form"
         method="POST"
@@ -42,17 +50,7 @@ function RegisterComponent() {
           type="text"
           name="username"
           id="username"
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <label className="text-white text-2xl" htmlFor="password">
-          Password
-        </label>
-        <input
-          className="bg-white rounded-lg p-2"
-          type="password"
-          name="password"
-          id="password"
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <button
           type="submit"
